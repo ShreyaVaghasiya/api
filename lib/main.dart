@@ -26,15 +26,15 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   @override
-
-
+  UserResponse userResponse = UserResponse();
 
   void initState() {
     // TODO: implement initState
     super.initState();
     getUserResponse();
-
   }
+
+  List<DataList> finalList = [];
 
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
@@ -51,22 +51,77 @@ class _MyAppState extends State<MyApp> {
         ),
         backgroundColor: CupertinoColors.white,
       ),
-
       body: ListView.builder(
-
-          itemBuilder: (context,index){
-        return ListTile(
-        );
-      }),
+          itemCount: finalList.length,
+          itemBuilder: (context, index) {
+            return Container(
+              margin: EdgeInsets.all(10),
+              height: h / 6,
+              width: w,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.black12, width: 2),
+                color: CupertinoColors.white,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      Image(
+                        image: NetworkImage('${finalList[index].image}'),
+                        height: h / 3,
+                        width: w / 4,
+                        fit: BoxFit.cover,
+                      ),
+                      SizedBox(width: 10,),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "${finalList[index].name}",
+                            style: GoogleFonts.lato(
+                                fontSize: 16,
+                                color: CupertinoColors.black,
+                                fontWeight: FontWeight.w800),
+                          ),
+                          Text("${finalList[index].categoryName}",style: GoogleFonts.lato(
+                            fontSize: 14,
+                            color: Colors.black54,
+                            fontWeight: FontWeight.w600,
+                          ),),
+                          Text("${finalList[index].price} Rs",style: GoogleFonts.lato(
+                            fontSize: 14,
+                            color: Colors.black54,
+                            fontWeight: FontWeight.w600,
+                          ),),
+                          Text("${finalList[index].averageRating}",style: GoogleFonts.lato(
+                            fontSize: 14,
+                            color: Colors.orange,
+                            fontWeight: FontWeight.w600,
+                          ),)
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }),
     );
   }
+
   getUserResponse() async {
-    var url = Uri.parse(
-        Utils.BASE_URL);
+    var url = Uri.parse(Utils.BASE_URL);
     http.Response response = await http.get(url);
     if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      return data;
+      // var data = jsonDecode(response.body);
+      userResponse = UserResponse.fromJson(json.decode(response.body));
+      finalList.addAll(userResponse.productData!);
+      return finalList;
+      print(finalList[0].id);
     } else {
       print("No Data Found !");
     }

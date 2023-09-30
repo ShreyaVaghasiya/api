@@ -9,14 +9,14 @@ UserResponse userResponseFromJson(String str) => UserResponse.fromJson(json.deco
 String userResponseToJson(UserResponse data) => json.encode(data.toJson());
 
 class UserResponse {
-  List<ProductDatum>? productData;
+  List<DataList>? productData;
 
   UserResponse({
     this.productData,
   });
 
   factory UserResponse.fromJson(Map<String, dynamic> json) => UserResponse(
-    productData: json["ProductData"] == null ? [] : List<ProductDatum>.from(json["ProductData"]!.map((x) => ProductDatum.fromJson(x))),
+    productData: json["ProductData"] == null ? [] : List<DataList>.from(json["ProductData"]!.map((x) => DataList.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -24,7 +24,7 @@ class UserResponse {
   };
 }
 
-class ProductDatum {
+class DataList {
   String? id;
   String? categoryName;
   String? name;
@@ -32,7 +32,7 @@ class ProductDatum {
   String? image;
   String? averageRating;
 
-  ProductDatum({
+  DataList({
     this.id,
     this.categoryName,
     this.name,
@@ -41,7 +41,7 @@ class ProductDatum {
     this.averageRating,
   });
 
-  factory ProductDatum.fromJson(Map<String, dynamic> json) => ProductDatum(
+  factory DataList.fromJson(Map<String, dynamic> json) => DataList(
     id: json["Id"],
     categoryName: json["CategoryName"],
     name: json["Name"],
